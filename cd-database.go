@@ -9,7 +9,7 @@ import (
 const programTitle = "CD Database"
 
 func main() {
-	var albums string
+	var albums []string
 	println(programTitle)
 
 	for {
@@ -21,7 +21,8 @@ func main() {
 		case 'l', 'L':
 			listCDs(albums)
 		case 'a', 'A':
-			albums = addCD()
+			// albums = getNewCD()
+			albums = append(albums, getNewCD()) /* append - jak metoda push w JS */
 		case 'd', 'D':
 			deleteCD()
 		}
@@ -34,12 +35,14 @@ func readCmd() rune {
 	return cmd
 }
 
-func listCDs(albums string) {
+func listCDs(albums []string) {
 	println("Displaying list of CDs")
-	println(albums)
+	for i, v := range albums { /* odpowiednik for each */
+		fmt.Printf("%d. %s", i+1, v)
+	}
 }
 
-func addCD() string {
+func getNewCD() string {
 	println("Adding new CD")
 	return readString("Input album title: ")
 }
@@ -52,5 +55,6 @@ func readString(title string) string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(title)
 	input, _ := reader.ReadString('\n')
+	// input = strings.TrimSuffix(input, "\n")
 	return input
 }
