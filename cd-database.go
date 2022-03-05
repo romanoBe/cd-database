@@ -4,12 +4,16 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
+
+	"github.com/romanoBe/cd-database/model"
 )
 
 const programTitle = "CD Database"
 
 func main() {
-	var albums []string
+	var myCollection model.Collection
 	println(programTitle)
 
 	for {
@@ -19,10 +23,15 @@ func main() {
 		case 'q', 'Q':
 			return
 		case 'l', 'L':
-			listCDs(albums)
+			listCDs(myCollection.Albums)
 		case 'a', 'A':
-			// albums = getNewCD()
-			albums = append(albums, getNewCD()) /* append - jak metoda push w JS */
+			artist, title, year := getNewCD()
+			album := model.Album{
+				Artist: artist,
+				Title:  title,
+				Year:   year,
+			}
+			myCollection.Albums = append(myCollection.Albums, album)
 		case 'd', 'D':
 			deleteCD()
 		}
@@ -35,16 +44,23 @@ func readCmd() rune {
 	return cmd
 }
 
-func listCDs(albums []string) {
+func listCDs(albums []model.Album) {
 	println("Displaying list of CDs")
-	for i, v := range albums { /* odpowiednik for each */
-		fmt.Printf("%d. %s", i+1, v)
+	for i, v := range albums {
+		fmt.Printf("%d. %s \"%s\" %d \n", i+1, v.Artist, v.Title, v.Year)
 	}
 }
 
-func getNewCD() string {
+func getNewCD() (string, string, int) {
 	println("Adding new CD")
-	return readString("Input album title: ")
+	artist := readString("Input artist: ")
+	title := readString("Input album title: ")
+	year, err := strconv.Atoi(readString("Input release year: "))
+	if err != nil {
+		println("ERROR!", err.Error())
+		panic("Wychodzę")
+	}
+	return artist, title, year
 }
 
 func deleteCD() {
@@ -55,6 +71,6 @@ func readString(title string) string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(title)
 	input, _ := reader.ReadString('\n')
-	// input = strings.TrimSuffix(input, "\n")
+	input = strings.TrimSuffix(input, "\r\n")
 	return input
 }
