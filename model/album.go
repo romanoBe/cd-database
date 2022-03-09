@@ -1,7 +1,8 @@
 package model
 
 type Album struct {
-	Artist string
-	Title  string
-	Year   int
+	Artist      string
+	Title       string
+	RecordLabel string
+	Year        int
 }

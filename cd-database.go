@@ -25,11 +25,12 @@ func main() {
 		case 'l', 'L':
 			listCDs(myCollection.Albums)
 		case 'a', 'A':
-			artist, title, year := getNewCD()
+			artist, title, label, year := getNewCD()
 			album := model.Album{
-				Artist: artist,
-				Title:  title,
-				Year:   year,
+				Artist:      artist,
+				Title:       title,
+				RecordLabel: label,
+				Year:        year,
 			}
 			myCollection.Albums = append(myCollection.Albums, album)
 		case 'd', 'D':
@@ -47,20 +48,21 @@ func readCmd() rune {
 func listCDs(albums []model.Album) {
 	println("Displaying list of CDs")
 	for i, v := range albums {
-		fmt.Printf("%d. %s \"%s\" %d \n", i+1, v.Artist, v.Title, v.Year)
+		fmt.Printf("%d. %s \"%s\" %s %d \n", i+1, v.Artist, v.Title, v.RecordLabel, v.Year)
 	}
 }
 
-func getNewCD() (string, string, int) {
+func getNewCD() (string, string, string, int) {
 	println("Adding new CD")
 	artist := readString("Input artist: ")
 	title := readString("Input album title: ")
+	label := readString("Input record label: ")
 	year, err := strconv.Atoi(readString("Input release year: "))
 	if err != nil {
 		println("ERROR!", err.Error())
 		panic("Wychodzę")
 	}
-	return artist, title, year
+	return artist, title, label, year
 }
 
 func deleteCD() {
